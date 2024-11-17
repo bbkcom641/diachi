@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Form Sử Dụng Vị Trí Của Bạn</title>
+    <title>Linh Ứng</title>
     <style>
         #locationField {
             width: 100%;
@@ -22,6 +22,7 @@
     
     <!-- Ô nhập để hiển thị địa chỉ (có thể chỉnh sửa) -->
     <input type="text" id="locationField" placeholder="Vị trí của bạn sẽ hiển thị ở đây" />
+    
 
     <script>
         var userLocation;
@@ -31,7 +32,7 @@
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(showPosition, showError);
             } else {
-                alert("Trình duyệt của bạn không hỗ trợ Geolocation.");
+                alert("Bạn cần cấp quyền truy cập vị trí.");
             }
         }
 
@@ -63,10 +64,10 @@
                     alert("Không thể lấy thông tin vị trí.");
                     break;
                 case error.TIMEOUT:
-                    alert("Lấy vị trí mất quá nhiều thời gian.");
+                    alert("Kết nối mạng không ổn định");
                     break;
                 case error.UNKNOWN_ERROR:
-                    alert("Lỗi không xác định.");
+                    alert("Lỗi kết nối.");
                     break;
             }
         }
