@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Sử Dụng Vị Trí Của Bạn</title>
+    <style>
+        #locationField {
+            width: 100%;
+            padding: 10px;
+            margin-top: 20px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Sử Dụng Vị Trí Của Bạn</h2>
+    
+    <!-- Nút để lấy vị trí người dùng -->
+    <button onclick="getLocation()">Sử Dụng Vị Trí Của Tôi</button>
+    
+    <!-- Ô nhập để hiển thị địa chỉ (có thể chỉnh sửa) -->
+    <input type="text" id="locationField" placeholder="Vị trí của bạn sẽ hiển thị ở đây" />
+
+    <script>
+        var userLocation;
+
+        // Kiểm tra quyền truy cập vị trí người dùng
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition, showError);
+            } else {
+                alert("Trình duyệt của bạn không hỗ trợ Geolocation.");
+            }
+        }
+
+        // Hiển thị vị trí và thông tin địa chỉ
+        function showPosition(position) {
+            userLocation = {
+                lat: position.coords.latitude,
+                lon: position.coords.longitude
+            };
+
+            // Gửi yêu cầu API LocationIQ để lấy thông tin chi tiết về vị trí
+            fetch(`https://us1.locationiq.com/v1/reverse.php?key=pk.3fb060d4ddb82ae8da4feae7223e2dc7&lat=${userLocation.lat}&lon=${userLocation.lon}&format=json`)
+                .then(response => response.json())
+                .then(data => {
+                    // Hiển thị địa chỉ chi tiết
+                    var address = data.address;
+                    document.getElementById("locationField").value = `Địa chỉ: ${address.road}, ${address.city}, ${address.state}, ${address.country}`;
+                })
+                .catch(err => console.log(err));
+        }
+
+        // Hiển thị lỗi nếu không lấy được vị trí
+        function showError(error) {
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    alert("Người dùng từ chối chia sẻ vị trí.");
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    alert("Không thể lấy thông tin vị trí.");
+                    break;
+                case error.TIMEOUT:
+                    alert("Lấy vị trí mất quá nhiều thời gian.");
+                    break;
+                case error.UNKNOWN_ERROR:
+                    alert("Lỗi không xác định.");
+                    break;
+            }
+        }
+    </script>
+
+</body>
+</html>
